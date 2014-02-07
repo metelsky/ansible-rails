@@ -23,7 +23,7 @@
   file: path=/usr/local/bin/rbenv src={{ rbenv_root }}/bin/rbenv state=link
 
 - name: rbenv | add rbenv initialization to profile
-  template: src=rbenv.sh.j2 dest=/etc/profile.d/rbenv.sh owner=deploy group=deploy mode=0755
+  template: src=rbenv.sh.j2 dest=/etc/profile.d/rbenv.sh owner=root group=root mode=0755
 
 - name: rbenv | check ruby-build installed
   command: test -x /usr/local/bin/ruby-build
@@ -66,6 +66,3 @@
 
 - name: rbenv | set gemrc
   copy: src=gemrc dest=/root/.gemrc owner=root group=root mode=0644
-  
-- name: install bundler
-  command: sudo /home/deploy/.rbenv/shims/gem install bundler

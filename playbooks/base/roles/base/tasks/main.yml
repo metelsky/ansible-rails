@@ -1,9 +1,7 @@
----
-
 # Basic security
 # ====================================================
 
-- name: Update APT package cache
+- name:   Update APT package cache
   action: apt update_cache=yes
 
 - name: Install mosh
@@ -16,7 +14,7 @@
 # ====================================================
 
 - name: Add deployment user
-  action: user name=deploy password=$deploy_password
+  action: user name=deploy password={{ deploy_password }}
 
 - name: Add authorized deploy key
   action: authorized_key user=deploy key='$FILE(~/.ssh/id_rsa.pub)'
@@ -45,7 +43,7 @@
 # Install anything essential that you need here
 # ====================================================
 
-- name: Install essential packages
+- name: install essential packages
   apt: pkg={{ item }} state=latest
   sudo: true
   with_items:
@@ -56,13 +54,12 @@
     - git-core
     - python-setuptools
     - python-software-properties
-   
-# Run/un-comment the following if you want to lock down the server
+
 # ====================================================
 
-# - name: Disallow root SSH access
-#   action: lineinfile dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
-# 
+- name: Disallow root SSH access
+  action: lineinfile dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
+
 - name: Disallow password authentication
   action: lineinfile dest=/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
   notify: Restart ssh

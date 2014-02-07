@@ -21,14 +21,6 @@
     - postgresql-contrib
     - postgresql-common
 
-- name: Add postgres user to admin group
-  action: user name=postgres groups=admin append=yes
-  
-- name: Create the postgresql deploy user 
-  postgresql_user: name=deploy password=deploy
-  sudo: yes
-  sudo_user: postgres
-  
 - name: Copy postgres hba config
   template: src=pg_hba.conf dest=/etc/postgresql/9.1/main/pg_hba.conf
   
