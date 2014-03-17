@@ -65,4 +65,4 @@
   when: ruby_installed|failed
 
 - name: rbenv | set gemrc
-  copy: src=gemrc dest=/root/.gemrc owner=root group=root mode=0644
+  copy: src=gemrc dest=/home/deploy/.gemrc owner=deploy group=root mode=0644

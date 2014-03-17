@@ -12,7 +12,7 @@ It should allow you to have a development environment that is identical to your 
 + Unicorn
 + Rbenv
 + Node.js
-+ Postgres or MySQL
++ Postgres
 
 ## Use
 
@@ -20,7 +20,7 @@ For local Vagrant development
 
 ```
 vagrant up
-./deploy.sh
+./vagrant_deploy.sh
 ssh deploy@33.33.33.3
 ```
 

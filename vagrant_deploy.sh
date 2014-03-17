@@ -8,18 +8,7 @@
 # ==============================================================================
 
 echo '\nRunning server provisioning...\n'
-
 ansible-playbook playbooks/base/setup.yml -i vagrant-hosts -u vagrant --private-key=~/.vagrant.d/insecure_private_key -vvv
-
-# ==============================================================================
-#
-# The following playbooks are run as the deploy user
-#
-# ==============================================================================
-
 echo '\nRunning as deploy user...\n'
+ansible-playbook playbooks/rbenv/setup.yml -i vagrant-hosts -u vagrant --private-key=~/.vagrant.d/insecure_private_key -vvv
 
-ansible-playbook playbooks/rbenv/setup.yml -i vagrant-hosts -u deploy
-ansible-playbook playbooks/nginx/setup.yml -i vagrant-hosts -u deploy
-ansible-playbook playbooks/node/setup.yml  -i vagrant-hosts -u deploy
-# ansible-playbook playbooks/mysql/setup.yml -i vagrant-hosts -u deploy

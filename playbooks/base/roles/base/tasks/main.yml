@@ -17,7 +17,7 @@
   action: user name=deploy password={{ deploy_password }}
 
 - name: Add authorized deploy key
-  action: authorized_key user=deploy key='$FILE(~/.ssh/id_rsa.pub)'
+  authorized_key: user=deploy key={{ lookup('file', '~/.ssh/id_rsa.pub') }}
 
 - name: Remove sudo group rights
   action: lineinfile dest=/etc/sudoers regexp="^%sudo" state=absent
@@ -25,7 +25,7 @@
 - name: Add deploy user to sudoers
   action: lineinfile dest=/etc/sudoers regexp="deploy ALL" line="deploy ALL=(ALL) NOPASSWD:ALL" state=present
 
-# Firewall
+# FIREWALL
 # ====================================================
 
 - name: Setup ufw
@@ -40,26 +40,64 @@
 - name: Enable ufw
   action: shell echo 'y' | ufw enable
 
-# Install anything essential that you need here
-# ====================================================
-
 - name: install essential packages
   apt: pkg={{ item }} state=latest
   sudo: true
   with_items:
     - build-essential
     - wget
-    - emacs
     - curl
     - git-core
     - python-setuptools
     - python-software-properties
 
+# NODE JS
 # ====================================================
 
-- name: Disallow root SSH access
-  action: lineinfile dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
+- name: add node repo
+  apt_repository: repo=ppa:chris-lea/node.js
 
-- name: Disallow password authentication
-  action: lineinfile dest=/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
-  notify: Restart ssh
+- name: update apt
+  command: sudo apt-get update
+
+- name: install node packages
+  apt: name=nodejs state=latest update_cache=yes
+  
+# NGINX
+# ====================================================
+  
+- name: add nginx latest version ppa
+  action: apt_repository repo=ppa:nginx/stable
+
+- name: update apt
+  command: sudo apt-get update
+
+- name: install nginx
+  action: apt name=nginx
+
+- name: delete default vhost
+  action: file path=/etc/nginx/sites-enabled/default state=absent
+  notify:
+  - restart nginx
+  
+# PSQL
+# ====================================================
+  
+- name: Install PostgreSQL dependencies
+  action: apt pkg={{item}} state=latest
+  with_items:
+  - python-pycurl
+  - python-psycopg2
+
+- name: Add postgres latest version ppa
+  action: apt_repository repo=ppa:pitti/postgresql
+
+- name: Update APT cache
+  action: apt update_cache=yes
+
+- name: Install db server packages
+  action: apt pkg={{ item }} state=present
+  with_items:
+  - postgresql
+  - postgresql-contrib
+  - postgresql-common
