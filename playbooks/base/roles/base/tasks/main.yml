@@ -17,7 +17,7 @@
   action: user name=deploy password={{ deploy_password }}
 
 - name: Add authorized deploy key
-  authorized_key: user=deploy key={{ lookup('file', '~/.ssh/id_rsa.pub') }}
+  authorized_key: user=deploy key='{{ lookup('file', '~/.ssh/id_rsa.pub') }}'
 
 - name: Remove sudo group rights
   action: lineinfile dest=/etc/sudoers regexp="^%sudo" state=absent
