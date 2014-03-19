@@ -48,6 +48,7 @@
     - wget
     - curl
     - git-core
+    - python-pycurl
     - python-setuptools
     - python-software-properties
 
