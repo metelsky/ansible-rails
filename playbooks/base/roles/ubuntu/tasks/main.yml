@@ -33,7 +33,13 @@
 
 - name: Setup ufw
   action: shell ufw allow 80
+  
+- name: Rails port access 
+  action: shell ufw allow 3000
 
+- name: Unicorn port access 
+  action: shell ufw allow 8080
+    
 - name: Setup ufw
   action: shell ufw allow 443
 
