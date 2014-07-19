@@ -3,8 +3,7 @@
 This will provision a Rails box suitable for production use running Nginx, Unicorn and
 Postgres on a cloud Ubuntu server or local Vagrant environment.
 
-It should allow you to have a development environment that is identical to your production environment.
-
+It should allow you to have a development environment that is identical to your production environment
 ## Stack
 
 + Rails
@@ -16,15 +15,21 @@ It should allow you to have a development environment that is identical to your 
 
 ## Use
 
+A demo site called "blog" is included as an example which is just a default Rails 4 project.
+
 For local Vagrant development
 
 ```
-vagrant up
-./vagrant_deploy.sh
-ssh deploy@33.33.33.3
+vagrant up && ./bootstrap.sh
+ssh deploy@192.168.33.10
+cd /var/www/blog
 ```
 
-Use Capistrano to deploy your web application to your Vagrant box or cloud server
+Use Capistrano to deploy your web application to your Vagrant box or cloud server. By default the vagrant box mounts your site at /var/www/blog
+
+```
+config.vm.synced_folder "blog/", "/var/www/blog/"
+```
 
 ## Advanced
 

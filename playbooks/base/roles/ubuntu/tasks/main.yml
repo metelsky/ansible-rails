@@ -1,0 +1,53 @@
+# Basic security
+# ====================================================
+
+- name:   Update APT package cache
+  action: apt update_cache=yes
+
+- name: Install mosh
+  action: apt pkg=mosh state=installed
+
+- name: Install fail2ban
+  action: apt pkg=fail2ban state=installed
+
+# DEPLOY USER
+# ====================================================
+
+- name: Add deployment user
+  action: user name=deploy password={{ deploy_password }}
+
+- name: Add authorized deploy key
+  authorized_key: user=deploy key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+- name: Remove sudo group rights
+  action: lineinfile dest=/etc/sudoers regexp="^%sudo" state=absent
+
+- name: Add deploy user to sudoers
+  action: lineinfile dest=/etc/sudoers regexp="deploy ALL" line="deploy ALL=(ALL) NOPASSWD:ALL" state=present
+
+# FIREWALL
+# ====================================================
+
+- name: Setup ufw
+  action: shell ufw allow 22
+
+- name: Setup ufw
+  action: shell ufw allow 80
+
+- name: Setup ufw
+  action: shell ufw allow 443
+
+- name: Enable ufw
+  action: shell echo 'y' | ufw enable
+
+- name: install essential packages
+  apt: pkg={{ item }} state=latest
+  sudo: true
+  with_items:
+    - build-essential
+    - wget
+    - curl
+    - git-core
+    - python-pycurl
+    - python-setuptools
+    - python-software-properties

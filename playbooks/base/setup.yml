@@ -4,4 +4,4 @@
   vars:
     - deploy_password: 'deploy'
   roles:
-    - base
+    - ubuntu
