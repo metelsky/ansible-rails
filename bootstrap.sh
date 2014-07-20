@@ -30,7 +30,7 @@ function run_playbook {
     ansible-playbook playbooks/$1/setup.yml -i hosts -u vagrant --private-key=~/.vagrant.d/insecure_private_key
 }
 
-declare -a playbooks=("base" "node" "nginx" "postgres" "rbenv")
+declare -a playbooks=("base" "nginx" "postgres" "rbenv")
 
 for playbook in "${playbooks[@]}"
 do
