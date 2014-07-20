@@ -10,7 +10,6 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 3000, host: 3000
   
   config.vm.synced_folder ".", "/var/www/", 
-    id: "vagrant-root",
     owner: "deploy",
     group: "www-data",
     type: "nfs"
