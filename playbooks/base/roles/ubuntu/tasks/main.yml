@@ -25,23 +25,14 @@
 - name: Add deploy user to sudoers
   action: lineinfile dest=/etc/sudoers regexp="deploy ALL" line="deploy ALL=(ALL) NOPASSWD:ALL" state=present
 
-# FIREWALL
-# ====================================================
-
-- name: Setup ufw
-  action: shell ufw allow 22
-
-- name: Setup ufw
-  action: shell ufw allow 80
-  
-- name: Rails port access 
-  action: shell ufw allow 3000
-
-- name: Unicorn port access 
-  action: shell ufw allow 8080
-    
-- name: Setup ufw
-  action: shell ufw allow 443
+- name: Configure firewall
+  ufw: rule=allow port={{ item }} proto=tcp
+  with_items:
+    - "22"
+    - "80"
+    - "443"
+    - "3000"
+    - "8080"
 
 - name: Enable ufw
   action: shell echo 'y' | ufw enable
@@ -51,9 +42,7 @@
   sudo: true
   with_items:
     - build-essential
-    - wget
-    - curl
     - git-core
-    - python-pycurl
     - python-setuptools
     - python-software-properties
+    - nodejs
