@@ -4,9 +4,6 @@
 - name:   Update APT package cache
   action: apt update_cache=yes
 
-- name: Install mosh
-  action: apt pkg=mosh state=installed
-
 - name: Install fail2ban
   action: apt pkg=fail2ban state=installed
 
@@ -14,7 +11,7 @@
 # ====================================================
 
 - name: Add deployment user
-  action: user name=deploy password={{ deploy_password }}
+  action: user name=deploy password={{ deploy_password }} shell=/bin/bash
 
 - name: Add authorized deploy key
   authorized_key: user=deploy key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
@@ -37,7 +34,7 @@
 - name: Enable ufw
   action: shell echo 'y' | ufw enable
 
-- name: install essential packages
+- name: Install essential packages
   apt: pkg={{ item }} state=latest
   sudo: true
   with_items:
@@ -45,4 +42,21 @@
     - git-core
     - python-setuptools
     - python-software-properties
-    - nodejs
+
+- name: Create /var/www
+  file: path=/var/www state=directory
+
+- name: Create app directory /var/www/{{ app_name }}
+  file: path=/var/www/{{ app_name }} state=directory
+
+- name: Fix deploy user permissions
+  command: sudo chown -R {{ deploy_user }}:www-data {{ rbenv_root }}
+
+- name: Add deploy user to www-data group
+  command: sudo adduser {{ deploy_user }} www-data
+
+- name: Fix deploy user permissions
+  command: sudo chown -R {{ deploy_user }}:www-data /var/www/{{ app_name }}
+
+- name: Fix deploy user permissions
+  command: sudo chmod -R g+rw /var/www
