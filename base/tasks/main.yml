@@ -49,9 +49,6 @@
 - name: Create app directory /var/www/{{ app_name }}
   file: path=/var/www/{{ app_name }} state=directory
 
-- name: Fix deploy user permissions
-  command: sudo chown -R {{ deploy_user }}:www-data {{ rbenv_root }}
-
 - name: Add deploy user to www-data group
   command: sudo adduser {{ deploy_user }} www-data
 

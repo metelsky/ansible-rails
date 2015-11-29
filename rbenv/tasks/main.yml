@@ -56,6 +56,9 @@
   shell: RBENV_ROOT={{rbenv_root}} rbenv install {{ruby_version}}
   when: ruby_installed|failed
 
+- name: Fix deploy user permissions
+  command: sudo chown -R {{ deploy_user }}:www-data {{ rbenv_root }}
+
 - name: Set global ruby {{ruby_version}}
   shell: RBENV_ROOT={{rbenv_root}} rbenv global {{ruby_version}}
   when: ruby_installed|failed
