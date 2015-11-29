@@ -3,10 +3,10 @@
   sudo: yes
   gather_facts: no
   vars:
-    - app_name: salesport
+    - app_name: APPNAME
     - deploy_user: deploy
-    - deploy_password: sIjhuPy7W01xWNIXaoH4yRzaqfo5hW6awEVLO9wXRUA21v.LqWAUPmGTkQG8kEO6DpjZLo1dtoWF99C0i7dr
-    - ruby_version: 2.1.1
+    - deploy_password: DEPLOY_PASSWORD
+    - ruby_version: 2.2.3
     - rbenv_root: /home/deploy/.rbenv
   roles:
     - base
